@@ -16,24 +16,6 @@
         {% endfor %}
     </ul>
 
-    <h2>Network Interfaces</h2>
-    <table class="pure-table">
-        <thead>
-            <tr>
-                <th>Interface</th>
-                <th>IP Address</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for iface, ip in interfaces.items() %}
-            <tr>
-                <td>{{ iface }}</td>
-                <td>{{ ip }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
     {% for rule in rules %}
     <div>
         <h2 id="{{ rule['name'] }}">{{ rule['name'] }} ({{ rule['ip'] }})</h2>
