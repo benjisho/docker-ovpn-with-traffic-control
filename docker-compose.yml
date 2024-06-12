@@ -9,8 +9,6 @@ services:
     environment:
       TCGUI_IP: 0.0.0.0
       TCGUI_PORT: 5000
-    ports:
-      - 5000:5000
     cap_add:
       - NET_ADMIN
     depends_on:
@@ -28,7 +26,7 @@ services:
       - label:disable
     volumes:
       - /dev/net:/dev/net:z
-      - ./vpn/client.ovpn:/vpn/client.ovpn:ro
+      - ./vpn/openvpn_client_no_tc.ovpn:/vpn/openvpn_client_no_tc.ovpn:ro
     environment:
       TZ: 'EST5EDT'
     restart: unless-stopped
@@ -39,9 +37,11 @@ services:
       - /run
       - /tmp
     networks:
+      no_tc_net:
+        ipv4_address: 10.9.91.200  # Ensure this IP is not in use
       vpn_net:
         ipv4_address: 10.9.96.101  # Ensure this IP is not in use
-    command: /bin/bash -c "openvpn --config /vpn/client.ovpn && ip route add default via 80.240.24.18 dev eth1"
+    command: /bin/bash -c "openvpn --config /vpn/openvpn_client_no_tc.ovpn && ip route add default via 80.240.24.18 dev eth0"
 
   openvpn_client_with_tc:
     container_name: openvpn_client_with_tc
@@ -54,7 +54,7 @@ services:
       - label:disable
     volumes:
       - /dev/net:/dev/net:z
-      - ./vpn/client.ovpn:/vpn/client.ovpn:ro
+      - ./vpn/openvpn_client_with_tc.ovpn:/vpn/openvpn_client_with_tc.ovpn:ro
     environment:
       TZ: 'EST5EDT'
     restart: unless-stopped
@@ -64,12 +64,14 @@ services:
     tmpfs:
       - /run
       - /tmp
+    ports:
+      - 5000:5000
     networks:
       tc_net:
-        ipv4_address: 10.9.91.200  # Ensure this IP is not in use
+        ipv4_address: 10.9.92.200  # Ensure this IP is not in use
       vpn_net:
         ipv4_address: 10.9.96.102  # Ensure this IP is not in use
-    command: /bin/bash -c "openvpn --config /vpn/client.ovpn && ip route add default via 80.240.24.18 dev eth1"
+    command: /bin/bash -c "openvpn --config /vpn/openvpn_client_with_tc.ovpn && ip route add default via 80.240.24.18 dev eth0"
 
 networks:
   vpn_net:
@@ -79,11 +81,17 @@ networks:
     ipam:
       config:
         - subnet: 10.9.96.0/24
-          gateway: 10.9.96.254  # Uncomment and set if you have a specific gateway for this subnet
+          gateway: 10.9.96.1
 
-  tc_net:
+  no_tc_net:
     driver: bridge
     ipam:
       config:
         - subnet: 10.9.91.0/24
           gateway: 10.9.91.1
+  tc_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.9.92.0/24
+          gateway: 10.9.92.1
