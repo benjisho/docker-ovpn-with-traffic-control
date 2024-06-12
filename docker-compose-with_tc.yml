@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  tc-server:
+    build:
+      context: ./
+      dockerfile: Dockerfile_TC
+    environment:
+      TCGUI_IP: 0.0.0.0
+      TCGUI_PORT: 5000
+    ports:
+      - 5000:5000
+    cap_add:
+      - NET_ADMIN
+      
+  openvpn_client1:
+    build:
+      context: ./
+      dockerfile: Dockerfile_openvpn_client
+    container_name: openvpn_client1
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./vpn/client.ovpn:/vpn/client.ovpn
+    environment:
+      - OPENVPN_OPTS=--config /vpn/client1.ovpn
+    networks:
+      vpn_net:
+        ipv4_address: 192.168.50.18  # Ensure this IP is not in use
+    command: /bin/bash -c "openvpn $OPENVPN_OPTS && ip route add default via 192.168.52.1 dev eth1"
+
+  openvpn_client2:
+    build:
+      context: ./
+      dockerfile: Dockerfile_openvpn_client
+    container_name: openvpn_client2
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./vpn/client.ovpn:/vpn/client.ovpn
+    environment:
+      - OPENVPN_OPTS=--config /vpn/client2.ovpn
+    networks:
+      vpn_net:
+        ipv4_address: 192.168.50.19  # Ensure this IP is not in use
+    command: /bin/bash -c "openvpn $OPENVPN_OPTS && ip route add default via 192.168.52.1 dev eth1"
+
+networks:
+  vpn_net:
+    driver: macvlan
+    driver_opts:
+      parent: eth0  # Inbound interface
+    ipam:
+      config:
+        - subnet: 192.168.50.0/24
+          gateway: 192.168.50.1  # Change to the actual gateway of your eth0 network
