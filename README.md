@@ -125,6 +125,8 @@ docker system prune -a
 - Ensure that your OpenVPN configuration files (`.ovpn`) are correctly set up and placed in the `vpn` directory.
 - Adjust environment variables and network configurations as needed to match your specific setup and requirements.
 
+> Ensure the line `setenv opt block-outside-dns` is removed from the .ovpn files.
+
 ## Troubleshooting
 
 If you encounter any issues, check the logs of the containers using:
