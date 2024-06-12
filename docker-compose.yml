@@ -14,7 +14,7 @@ services:
       - 5000:5000
     cap_add:
       - NET_ADMIN
-      
+
   openvpn_client_no_tc:
     container_name: openvpn_client_no_tc
     build:
@@ -26,10 +26,9 @@ services:
       - label:disable
     restart: unless-stopped
     volumes:
-      - ./vpn/client.ovpn:/vpn/client.ovpn
+      - ./vpn/client.ovpn:/vpn/client.ovpn:ro
     environment:
       TZ: 'EST5EDT'
-    # if using '-d' or 'DNS' you can't enable the `read_only: true` option
     read_only: true
     tmpfs:
       - /run
@@ -50,10 +49,9 @@ services:
       - label:disable
     restart: unless-stopped
     volumes:
-      - ./vpn/client.ovpn:/vpn/client.ovpn
+      - ./vpn/client.ovpn:/vpn/client.ovpn:ro
     environment:
       TZ: 'EST5EDT'
-    # if using '-d' or 'DNS' you can't enable the `read_only: true` option
     read_only: true
     tmpfs:
       - /run
@@ -71,4 +69,4 @@ networks:
     ipam:
       config:
         - subnet: 10.9.96.0/24
-          #gateway: 10.9.96.254  # Change to the actual gateway of your eth0 network
+          gateway: 10.9.96.254  # Uncomment and set if you have a specific gateway for this subnet
