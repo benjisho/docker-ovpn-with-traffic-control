@@ -71,4 +71,4 @@ networks:
     ipam:
       config:
         - subnet: 10.9.96.0/24
-          gateway: 10.9.96.254  # Change to the actual gateway of your eth0 network
+          #gateway: 10.9.96.254  # Change to the actual gateway of your eth0 network
