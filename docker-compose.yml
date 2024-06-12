@@ -41,7 +41,7 @@ services:
         ipv4_address: 10.9.91.200  # Ensure this IP is not in use
       vpn_net:
         ipv4_address: 10.9.96.101  # Ensure this IP is not in use
-    command: /bin/bash -c "openvpn --config /vpn/openvpn_client_no_tc.ovpn && ip route add default via ip-of-enp8s0 dev eth0"
+    command: /bin/bash -c "openvpn --config /vpn/openvpn_client_no_tc.ovpn && ip route add default via 80.240.24.18 dev eth0"
 
   openvpn_client_with_tc:
     container_name: openvpn_client_with_tc
@@ -71,7 +71,7 @@ services:
         ipv4_address: 10.9.92.200  # Ensure this IP is not in use
       vpn_net:
         ipv4_address: 10.9.96.102  # Ensure this IP is not in use
-    command: /bin/bash -c "openvpn --config /vpn/openvpn_client_with_tc.ovpn && ip route add default via ip-of-enp8s0 dev eth0"
+    command: /bin/bash -c "openvpn --config /vpn/openvpn_client_with_tc.ovpn && ip route add default via 80.240.24.18 dev eth0"
 
 networks:
   vpn_net:
