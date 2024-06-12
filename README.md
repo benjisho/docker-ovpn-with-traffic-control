@@ -142,3 +142,10 @@ docker compose logs -f <container_name>
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Credits
+
+We used the code from the following repositories as a base for our project:
+
+- [dperson/openvpn-client](https://github.com/dperson/openvpn-client)
+- [tum-lkn/tcgui](https://github.com/tum-lkn/tcgui)
