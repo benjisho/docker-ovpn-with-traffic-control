@@ -35,21 +35,21 @@ Make sure your directory structure looks like this:
 ### Network Configuration
 
 The Docker Compose file defines three networks:
-- `vpn_net`: A macvlan network for VPN traffic.
+- `inbound_traffic_net`: A macvlan network for VPN traffic.
 - `no_tc_net`: A bridge network for the `openvpn_client_no_tc` container.
 - `tc_net`: A bridge network for the `openvpn_client_with_tc` container.
 
-Make sure to replace `enp8s0` in `vpn_net` with your actual **inbound** network interface.
+Make sure to replace `enp8s0` in `inbound_traffic_net` with your actual **inbound** network interface.
 
 ### IP Configuration
 
 Ensure the specified IP addresses are unique and not in use:
 - `openvpn_client_no_tc`:
     - `10.9.91.200` on `no_tc_net`
-    - and `10.9.96.101` on `vpn_net`.
+    - and `10.9.96.101` on `inbound_traffic_net`.
 - `openvpn_client_with_tc`:
     - `10.9.92.200` on `tc_net`
-    - and `10.9.96.102` on `vpn_net`.
+    - and `10.9.96.102` on `inbound_traffic_net`.
 
 > In the `command:` section of each container:
 > Replace `host-outbound-physical-interface-ip` with the actual IP address of your host's outbound interface.
@@ -72,11 +72,9 @@ Ensure the specified IP addresses are unique and not in use:
    Start the containers using Docker Compose:
    ```sh
    docker compose up -d
+
+   #### Or just `docker compose up -d --build`
    ```
-
-   This command will create and start the containers in detached mode.
-
-    > Or just `docker compose up -d --build`
  
 4. **Verify the Setup**
 
