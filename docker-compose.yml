@@ -29,7 +29,6 @@ services:
       - ./vpn/client.ovpn:/vpn/client.ovpn
     environment:
       TZ: 'EST5EDT'
-      OPENVPN_OPTS: '--config /vpn/client1.ovpn'
     # if using '-d' or 'DNS' you can't enable the `read_only: true` option
     read_only: true
     tmpfs:
@@ -37,8 +36,8 @@ services:
       - /tmp
     networks:
       vpn_net:
-        ipv4_address: 192.168.50.18  # Ensure this IP is not in use
-    command: /bin/bash -c "openvpn $OPENVPN_OPTS && ip route add default via 192.168.52.1 dev eth1"
+        ipv4_address: 10.9.96.5  # Ensure this IP is not in use
+    command: /bin/bash -c "openvpn --config /vpn/client.ovpn && ip route add default via 192.168.52.1 dev eth1"
 
   openvpn_client_with_tc:
     container_name: openvpn_client_with_tc
@@ -54,7 +53,6 @@ services:
       - ./vpn/client.ovpn:/vpn/client.ovpn
     environment:
       TZ: 'EST5EDT'
-      OPENVPN_OPTS: '--config /vpn/client1.ovpn'
     # if using '-d' or 'DNS' you can't enable the `read_only: true` option
     read_only: true
     tmpfs:
@@ -62,15 +60,15 @@ services:
       - /tmp
     networks:
       vpn_net:
-        ipv4_address: 192.168.50.19  # Ensure this IP is not in use
-    command: /bin/bash -c "openvpn $OPENVPN_OPTS && ip route add default via 192.168.52.1 dev eth1"
+        ipv4_address: 10.9.96.4  # Ensure this IP is not in use
+    command: /bin/bash -c "openvpn --config /vpn/client.ovpn && ip route add default via 192.168.52.1 dev eth1"
 
 networks:
   vpn_net:
     driver: macvlan
     driver_opts:
-      parent: eth0  # Inbound interface
+      parent: enp8s0  # Inbound interface
     ipam:
       config:
-        - subnet: 192.168.50.0/24
-          gateway: 192.168.50.1  # Change to the actual gateway of your eth0 network
+        - subnet: 10.9.96.0/24
+          gateway: 10.9.96.254  # Change to the actual gateway of your eth0 network
