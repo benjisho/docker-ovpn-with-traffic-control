@@ -13,9 +13,9 @@ services:
       - 5000:5000
     cap_add:
       - NET_ADMIN
-    networks:
-      tc_net:
-        ipv4_address: 10.9.91.100  # Ensure this IP is not in use
+    depends_on:
+      - openvpn_client_with_tc
+    network_mode: "service:openvpn_client_with_tc"
 
   openvpn_client_no_tc:
     container_name: openvpn_client_no_tc
